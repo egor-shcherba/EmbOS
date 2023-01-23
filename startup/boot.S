@@ -17,6 +17,7 @@ STACK_BOTTOM:
 .globl _start
 _start:
   mov $STACK_BOTTOM, %esp
+  jmp main
 
   cli
   hlt
