@@ -18,8 +18,11 @@ LDFLAGS = \
 	-T ./linker.lds
 
 SRC = \
-	./startup/boot.S \
-	./main.c
+	startup/boot.S \
+	main.c  \
+	klib/string.c \
+	klib/vsprintf.c \
+	debug/qemu.c
 
 OBJ = $(patsubst %.S,%.o,$(patsubst %.c,%.o,$(SRC)))
 
@@ -27,7 +30,7 @@ BINARY = kernel.elf
 
 QEMU = qemu-system-x86_64
 
-QEMU_FLAGS = -m 32
+QEMU_FLAGS = -m 32 -debugcon stdio
 
 all: clean $(OBJ)
 	$(LD) $(LDFLAGS) -o $(BINARY) $(OBJ)
