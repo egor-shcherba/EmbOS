@@ -3,7 +3,7 @@ AS = as
 LD = ld
 
 CFLAGS = \
-	-Wall -Wextra -pedantic -O2 \
+	-Wall -Wextra -pedantic -O2 -std=c11 \
 	-m32 -nostdinc -mgeneral-regs-only \
 	-ffreestanding -fno-stack-protector \
 	-fno-omit-frame-pointer \
@@ -22,7 +22,12 @@ SRC = \
 	main.c  \
 	klib/string.c \
 	klib/vsprintf.c \
-	debug/qemu.c
+	debug/qemu.c \
+	sys/gdt.c \
+	sys/idt.c \
+	sys/exception.c \
+	sys/isr.S \
+	sys/pic.c \
 
 OBJ = $(patsubst %.S,%.o,$(patsubst %.c,%.o,$(SRC)))
 
