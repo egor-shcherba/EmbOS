@@ -1,6 +1,6 @@
 #include <string.h>
 
-extern char*
+char*
 strcpy(char *dest, const char *src)
 {
   char *ptr = dest;
@@ -13,7 +13,7 @@ strcpy(char *dest, const char *src)
   return dest;
 }
 
-extern char*
+char*
 strncpy(char *dest, const char *src, size_t n)
 {
   char *ptr = dest;
@@ -24,7 +24,7 @@ strncpy(char *dest, const char *src, size_t n)
   return dest;
 }
 
-extern char*
+char*
 strcat(char *dest, const char *src)
 {
   char *ptr = dest;
@@ -38,7 +38,7 @@ strcat(char *dest, const char *src)
   return dest;
 }
 
-extern char*
+char*
 strncat(char *dest, const char *src, size_t n)
 {
   char *ptr = dest;
@@ -54,7 +54,7 @@ strncat(char *dest, const char *src, size_t n)
   return dest;
 }
 
-extern int
+int
 strcmp(const char *s1, const char *s2)
 {
   while (*s1 == *s2 && *s1 != '\0')
@@ -63,7 +63,7 @@ strcmp(const char *s1, const char *s2)
   return *s1 - *s2;
 }
 
-extern int
+int
 strncmp(const char *s1, const char *s2, size_t n)
 {
   while (*s1 == *s2 && n > 0)
@@ -72,18 +72,18 @@ strncmp(const char *s1, const char *s2, size_t n)
   return *s1 - *s2;
 }
 
-extern size_t
+size_t
 strlen(const char *s)
 {
-  size_t n = 0;
+  char *s2 = (char*) s;
 
-  while (*s == '\0')
-    s++, n++;
+  while (*s2++)
+    ;
 
-  return n;
+  return s2 - s;
 }
 
-extern char*
+char*
 strchr(const char *s, int c)
 {
   while (*s != '\0')
@@ -97,7 +97,7 @@ strchr(const char *s, int c)
   return NULL;
 }
 
-extern char*
+char*
 strrchr(const char *s, int c)
 {
   char *ptr = NULL;
@@ -113,7 +113,7 @@ strrchr(const char *s, int c)
   return ptr;
 }
 
-extern void*
+void*
 memset(void *s, int c, size_t n)
 {
   unsigned char *p = s;
@@ -124,7 +124,7 @@ memset(void *s, int c, size_t n)
   return s;
 }
 
-extern void*
+void*
 memcpy(void *dest, const void *src, size_t n)
 {
   unsigned char *p1 = dest; 
@@ -136,7 +136,7 @@ memcpy(void *dest, const void *src, size_t n)
   return dest;
 }
 
-extern void*
+void*
 memmove(void *dest, const void *src, size_t n)
 {
   unsigned char *p1 = dest;
