@@ -28,6 +28,7 @@ SRC = \
 	sys/exception.c \
 	sys/isr.S \
 	sys/pic.c \
+	mem/heap.c \
 
 OBJ = $(patsubst %.S,%.o,$(patsubst %.c,%.o,$(SRC)))
 
