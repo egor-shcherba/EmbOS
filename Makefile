@@ -29,6 +29,8 @@ SRC = \
 	sys/isr.S \
 	sys/pic.c \
 	mem/heap.c \
+	driver/uart.c \
+	system/printf.c \
 
 OBJ = $(patsubst %.S,%.o,$(patsubst %.c,%.o,$(SRC)))
 
