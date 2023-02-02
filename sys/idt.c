@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#define __DEBUG_HEADER__  "CPU"
+
 struct idt_entry {
   uint32_t handler_low : 16;
   uint32_t code_sel : 16;
@@ -90,5 +92,5 @@ idt_init(void)
     "lidt %0" :: "m" (idt_pointer)
   );
 
-  qprintf("[CPU] :: idt initialized.\n");
+  dprintf("idt initialized.\n");
 }
