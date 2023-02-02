@@ -2,6 +2,8 @@
 #include <debug/qemu.h>
 #include <stdint.h>
 
+#define __DEBUG_HEADER__  "CPU"
+
 struct gdt_entry {
   uint32_t limit_low : 16;
   uint32_t base_low  : 16;
@@ -77,5 +79,5 @@ gdt_init(void)
     :: "m" (gdt_pointer)
   );
 
-  qprintf("[CPU] :: gdt initialized.\n");
+  dprintf("gdt initialized.\n");
 }
