@@ -1,4 +1,4 @@
-#include <system/printf.h>
+#include <stdio.h>
 #include <driver/uart.h>
 #include <klib/vsprintf.h>
 #include <sys/x86.h>
