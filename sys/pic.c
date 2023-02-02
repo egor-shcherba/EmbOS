@@ -5,19 +5,21 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define MASTER_CMD_PORT  0x20
-#define MASTER_DATA_PORT 0x21
+#define __DEBUG_HEADER__  "CPU"
+#define MASTER_CMD_PORT   0x20
+#define MASTER_DATA_PORT  0x21
 
-#define SLAVE_CMD_PORT   0xA0
-#define SLAVE_DATA_PORT  0xA1
+#define SLAVE_CMD_PORT    0xA0
+#define SLAVE_DATA_PORT   0xA1
 
-#define CMD_EOI          0x20
+#define CMD_EOI           0x20
 
 #define ICW1_INIT         0x10
 #define ICW1_ICW4         0x01
 #define ICW4_8086         0x01
 
 #define HANDLERS_SIZE     15
+
 void (*handlers[HANDLERS_SIZE])(void) = { NULL };
 
 void
@@ -38,7 +40,7 @@ pic_init(void)
   outb(MASTER_DATA_PORT, 0xFF);
   outb(SLAVE_DATA_PORT, 0xFF);
 
-  qprintf("[CPU] :: pic initialized.\n");
+  dprintf("pic initialized.\n");
 }
 
 void
