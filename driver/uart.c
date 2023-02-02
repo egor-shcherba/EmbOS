@@ -3,6 +3,8 @@
 #include <debug/qemu.h>
 #include <macros.h>
 
+#define __DEBUG_HEADER__ "DRIVER"
+
 #define UART_CLOCK  115200
 #define BAUD_RATE   57600
 #define DIVISOR (UART_CLOCK / BAUD_RATE)
@@ -37,7 +39,7 @@ uart_init(void)
   outb(COM1_PORT + REG_LCR,  BIT_MODE | PARITY_NONE | STOP_BIT);
   outb(COM1_PORT + REG_IER,  IER_DATA);
 
-  qprintf("[DRIVER] :: uart initialized.\n");
+  dprintf("uart initialized.\n");
 }
 
 void
