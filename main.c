@@ -4,7 +4,7 @@
 #include <mem/heap.h>
 #include <driver/uart.h>
 #include <debug/qemu.h>
-#include <system/printf.h>
+#include <stdio.h>
 
 #define __DEBUG_HEADER__  "KERNEL"
 
