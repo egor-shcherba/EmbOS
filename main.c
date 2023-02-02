@@ -6,16 +6,20 @@
 #include <debug/qemu.h>
 #include <system/printf.h>
 
+#define __DEBUG_HEADER__  "KERNEL"
+
 void
 main(void)
 {
-  qprintf("kernel start initialize...\n");
+  dprintf("kernel start initialize...\n");
 
   gdt_init();
   idt_init();
   pic_init();
   heap_init();
   uart_init();
+
+  dprintf("initialized\n");
 
   printf("Welcome to EmbOS...\n");
 
