@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#define __DEBUG_HEADER__  "MEM"
+
 #define HEAP_SIZE   (0x00100000 * 16) /* 16 Mib */
 static volatile uint8_t memory[HEAP_SIZE] = { 0x0 };
 
@@ -25,8 +27,8 @@ heap_init(void)
   freep->next = freep;
   freep->size = nunits;
 
-  qprintf("[MEM] :: heap size %u Mib\n", sizeof(memory) / 1024 / 1024);
-  qprintf("[MEM] :: heap initialized.\n");
+  dprintf("heap size %u Mib\n", sizeof(memory) / 1024 / 1024);
+  dprintf("heap initialized.\n");
 }
 
 void
