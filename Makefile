@@ -31,6 +31,9 @@ SRC = \
 	mem/heap.c \
 	driver/uart.c \
 	system/printf.c \
+	system/syscall.c \
+	system/sched.c \
+	bin/init.c \
 
 OBJ = $(patsubst %.S,%.o,$(patsubst %.c,%.o,$(SRC)))
 
