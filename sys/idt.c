@@ -7,6 +7,8 @@
 
 #define __DEBUG_HEADER__  "CPU"
 
+extern void syscall_enter(void);
+
 struct idt_entry {
   uint32_t handler_low : 16;
   uint32_t code_sel : 16;
@@ -83,6 +85,8 @@ idt_init(void)
   register_interrupt(&idt_table[0x2A], &irq_13, INTR_GATE);
   register_interrupt(&idt_table[0x2A], &irq_14, INTR_GATE);
   register_interrupt(&idt_table[0x2A], &irq_15, INTR_GATE);
+
+  register_interrupt(&idt_table[0x80], &syscall_enter, INTR_GATE);
 
   idt_pointer.limit = sizeof(idt_table) - 1;
   idt_pointer.base  = (uint32_t) &idt_table;
