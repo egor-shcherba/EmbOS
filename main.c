@@ -3,10 +3,15 @@
 #include <sys/pic.h>
 #include <mem/heap.h>
 #include <driver/uart.h>
+#include <system/sched.h>
 #include <debug/qemu.h>
+#include <klib/list.h>
 #include <stdio.h>
+#include <string.h>
 
 #define __DEBUG_HEADER__  "KERNEL"
+
+extern void *(*init)(void*);
 
 void
 main(void)
@@ -17,12 +22,13 @@ main(void)
   idt_init();
   pic_init();
   heap_init();
+  sched_init();
   uart_init();
 
-  dprintf("initialized\n");
+  dprintf("all subsytem initialized.\n");
 
-  printf("Welcome to EmbOS...\n");
+  struct thread *thread_main;
+  sys_thread_create(&thread_main, "init thread", &init, NULL);
 
-  for (;;)
-    ;
+  sched_enable();
 }
