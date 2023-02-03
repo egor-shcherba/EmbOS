@@ -14,7 +14,6 @@
 .endm
 
 .macro RESTORE_REGS
-  pop %esp
   pop %edi
   pop %esi
   pop %ebp
@@ -49,14 +48,44 @@ irq_\number:
 
 except_enter:
   SAVE_REGS
+  call sched_save_current_context
   call exception_handler
-  RESTORE_REGS
-  add $8, %esp
-  iret
+  jmp intr_leave
 
 irq_common:
   SAVE_REGS
+  call sched_save_current_context
   call irq_main_handler
+  jmp intr_leave
+
+.globl syscall_enter
+syscall_enter:
+  push $0
+  push $0
+  SAVE_REGS
+
+  call sched_save_current_context
+
+  call syscall_main
+  mov %eax, 28(%esp)  # save eax in stack
+  jmp intr_leave
+
+#syscall_leave:
+#  call sched_get_current_context
+#  mov %eax, %esp
+#  RESTORE_REGS
+#  add $8, %esp
+#  iret
+
+#  cli
+#  hlt
+
+
+.globl intr_leave
+intr_leave:
+  call sched_get_current_context
+  mov %eax, %esp
+
   RESTORE_REGS
   add $8, %esp
   iret
