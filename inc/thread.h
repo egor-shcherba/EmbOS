@@ -6,6 +6,13 @@
 
 struct thread;
 
+static inline unsigned int
+__fn_obj_conv(void *(fn)(void*))
+{
+  unsigned int addr = (unsigned int) fn;
+  return addr;
+}
+
 static inline int
 thread_create(
   struct thread **thread,
@@ -16,7 +23,7 @@ thread_create(
   return _syscall(
     SYS_thread_create, thread,
     (void*) name,
-    (void*) start_routine,
+    (void*) __fn_obj_conv(start_routine),
     arg,
     NULL
   );
@@ -32,6 +39,12 @@ static inline void
 thread_sleep(void)
 {
   _syscall(SYS_thread_sleep, NULL, NULL, NULL, NULL, NULL);
+}
+
+static inline void
+thread_wakeup(struct thread *thread)
+{
+  _syscall(SYS_thread_wakeup, (void*) thread, NULL, NULL, NULL, NULL);
 }
 
 #endif /* NOT _THREAD_H */
