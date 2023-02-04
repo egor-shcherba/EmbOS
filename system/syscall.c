@@ -13,6 +13,7 @@ get_syscall_name(int num)
       case SYS_thread_create : return "sys_thread_create";
       case SYS_thread_yield  : return "sys_thread_yield";
       case SYS_thread_sleep  : return "sys_thread_sleep";
+      case SYS_thread_wakeup : return "sys_thread_wakeup";
     }
 
   return "UNKNOW";
@@ -47,11 +48,11 @@ syscall_main(struct regs_t *regs)
     {
       case SYS_thread_create: return sys_thread_create(
         (void*) regs->ebx, (void*) regs->ecx,
-        (void*(*)(void*)) regs->edx, (void*) regs->edi);
+        (void*(**)(void*)) regs->edx, (void*) regs->edi);
 
       case SYS_thread_yield: return sys_thread_yield();
-
       case SYS_thread_sleep: return sys_thread_sleep();
+      case SYS_thread_wakeup: return sys_thread_wakeup((struct thread*) regs->ebx);
     }
 
   return -1;
