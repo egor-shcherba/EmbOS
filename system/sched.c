@@ -11,8 +11,6 @@
 
 #include <sys/pic.h>
 
-#include <thread.h>
-
 #define __DEBUG_HEADER__  "SCHEDULER"
 
 extern __attribute__((noreturn)) void intr_leave(void);
@@ -124,12 +122,21 @@ sched_runq_get_current(void)
 static struct thread*
 sched_runq_get_next(void)
 {
-  struct thread *thread = sched_runq_dequeue();
+  struct thread *next = sched_runq_dequeue();
+  struct thread *current =runq->current;
 
-  if (thread == NULL)
+  if (next == NULL
+      && current != NULL
+      && current != runq->idle
+      && current->state == RUNNING)
+    {
+      return runq->current;
+    }
+
+  if (next == NULL)
     return runq->idle;
 
-  return thread;
+  return next;
 }
 
 void
@@ -158,7 +165,21 @@ sys_thread_sleep(void)
 {
   struct thread *thread = sched_runq_get_current();
   thread_set_state(thread, SLEEP);
+
+  dprintf("thread sleep '%s'\n", thread->name);
   schedule();
+
+
+  return 0;
+}
+
+int
+sys_thread_wakeup(struct thread *thread)
+{
+  thread_set_state(thread, RUNNING);
+  list_add_tail(runq->ready_queue, &thread->node);
+
+  dprintf("thread wakeup '%s'\n", thread->name);
 
   return 0;
 }
@@ -167,7 +188,7 @@ static inline void
 stack_init(
   void **stackp,
   size_t stack_size,
-  void *(*start_routine)(void *arg),
+  void *(**start_routine)(void *arg),
   void *arg
   )
 {
@@ -198,7 +219,7 @@ stack_init(
 int sys_thread_create(
   struct thread **thread,
   const char *name,
-  void *(*start_routine)(void *arg),
+  void *(**start_routine)(void *arg),
   void *arg)
 {
   struct thread *new_thread = alloc_thread();
@@ -227,8 +248,6 @@ int sys_thread_create(
   return 0;
 }
 
-
-
 void
 sched_save_current_context(void *esp)
 {
@@ -251,12 +270,19 @@ sched_get_current_context(void)
   return current->stackp;
 }
 
+static inline unsigned int
+__fn_obj_conv(void *(fn)(void*))
+{
+  unsigned int addr = (unsigned int) fn;
+  return addr;
+}
+
 static void
 thread_init_idle(void)
 {
   struct thread *thread = &thread_table[0];
   thread->stackp = kmalloc(THREAD_STACK_SIZE);
-  stack_init(&thread->stackp, THREAD_STACK_SIZE, &thread_idle, NULL);
+  stack_init(&thread->stackp, THREAD_STACK_SIZE, (void*)__fn_obj_conv(&thread_idle), NULL);
   thread_set_name(thread, "IDLE");
   thread_set_state(thread, RUNNING);
   thread->id = ++id;
@@ -275,7 +301,7 @@ sched_init(void)
   list_init(runq->ready_queue);
   runq->idle = &thread_table[0];
 
-  runq->current = runq->idle;
+  runq->current = NULL;
 
   irq_set_handler(0, schedule);
 
@@ -285,5 +311,6 @@ sched_init(void)
 __attribute__((noreturn)) void
 sched_enable(void)
 {
+  schedule();
   intr_leave();
 }
