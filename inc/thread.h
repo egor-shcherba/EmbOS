@@ -44,7 +44,19 @@ thread_sleep(void)
 static inline void
 thread_wakeup(struct thread *thread)
 {
-  _syscall(SYS_thread_wakeup, (void*) thread, NULL, NULL, NULL, NULL);
+  _syscall(SYS_thread_wakeup, thread, NULL, NULL, NULL, NULL);
+}
+
+static inline int
+thread_join(struct thread *thread, void **arg)
+{
+  return _syscall(SYS_thread_join, thread, arg, NULL, NULL, NULL);
+}
+
+static inline void
+thread_exit(void *retval)
+{
+  _syscall(SYS_thread_exit, retval, NULL, NULL, NULL, NULL);
 }
 
 #endif /* NOT _THREAD_H */
