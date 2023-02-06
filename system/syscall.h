@@ -5,6 +5,8 @@
 #define SYS_thread_yield    1
 #define SYS_thread_sleep    2
 #define SYS_thread_wakeup   3
+#define SYS_thread_join     4
+#define SYS_thread_exit     5
 
 int _syscall(int num, void *a1, void *a2, void *a3, void *a4, void *a5);
 
