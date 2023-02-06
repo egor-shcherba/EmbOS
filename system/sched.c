@@ -31,6 +31,9 @@ struct thread {
   char name[THREAD_NAME_LENGTH];
   void *stackp;
   enum THREAD_STATE state;
+  struct thread *joiner;
+  void **retval;
+
   struct list node;
 };
 
@@ -52,7 +55,7 @@ thread_idle(void *arg)
   UNUSED(arg);
 
   for (;;)
-    printf("IDLE\n");
+    cpu_halt();
 
   return NULL;
 }
@@ -60,13 +63,12 @@ thread_idle(void *arg)
 void
 thread_main(void *(*start_routine)(void *arg), void *arg)
 {
-  UNUSED(start_routine);
   UNUSED(arg);
 
-  start_routine(arg);
+  void *retval = start_routine(arg);
 
   cpu_disable_interrupt();
-  cpu_halt();
+  sys_thread_exit(retval);
 }
 
 static void
@@ -139,6 +141,15 @@ sched_runq_get_next(void)
   return next;
 }
 
+static inline void
+thread_destroy(struct thread *thread)
+{ 
+  dprintf("thread dead '%s'\n", thread->name);
+
+  kfree(thread->stackp);
+  memset(thread, 0, sizeof(*thread));
+}
+
 void
 schedule(void)
 {
@@ -146,6 +157,9 @@ schedule(void)
 
   prev = sched_runq_get_current();
   next = sched_runq_get_next();
+
+  if (prev->state == DEAD)
+    thread_destroy(prev);
 
   if (prev != runq->idle && prev->state == RUNNING)
     sched_runq_enqueue(prev);
@@ -169,7 +183,6 @@ sys_thread_sleep(void)
   dprintf("thread sleep '%s'\n", thread->name);
   schedule();
 
-
   return 0;
 }
 
@@ -180,6 +193,45 @@ sys_thread_wakeup(struct thread *thread)
   list_add_tail(runq->ready_queue, &thread->node);
 
   dprintf("thread wakeup '%s'\n", thread->name);
+
+  return 0;
+}
+
+int
+sys_thread_join(struct thread *thread, void **arg)
+{
+  struct thread *current = sched_runq_get_current();
+
+  if (thread->joiner != NULL)
+    return -EINVAL;
+
+  dprintf("thread '%s' join '%s'\n", current->name, thread->name);
+
+  thread->joiner = current;
+  thread->retval = arg;
+
+  sys_thread_sleep();
+
+  return 0;
+}
+
+int
+sys_thread_exit(void *retval)
+{
+  struct thread *current = sched_runq_get_current();
+  dprintf("thread exit '%s' reval %d\n", current->name, retval);
+
+  if (current->joiner != NULL)
+    {
+      if (current->retval != NULL)
+        *current->retval = retval;
+
+      sys_thread_wakeup(current->joiner);
+    }
+
+  thread_set_state(current, DEAD);
+  schedule();
+  intr_leave();
 
   return 0;
 }
@@ -240,6 +292,9 @@ int sys_thread_create(
   thread_set_state(new_thread, RUNNING);
   new_thread->id = ++id;
   new_thread->stackp = stack;
+  new_thread->joiner = NULL;
+  new_thread->retval = NULL;
+
   *thread = new_thread;
 
   sched_runq_enqueue(new_thread);
@@ -253,7 +308,6 @@ sched_save_current_context(void *esp)
 {
   runq->current->stackp = esp;
 }
-
 
 void*
 sched_get_current_context(void)
