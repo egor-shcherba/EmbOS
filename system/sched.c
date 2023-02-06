@@ -63,8 +63,6 @@ thread_idle(void *arg)
 void
 thread_main(void *(*start_routine)(void *arg), void *arg)
 {
-  UNUSED(arg);
-
   void *retval = start_routine(arg);
 
   cpu_disable_interrupt();
@@ -247,8 +245,9 @@ stack_init(
   uint32_t *stack = *stackp;
   stack = (uint32_t*) ((uint8_t*) stack + stack_size);
 
-  *--stack = (uint32_t) start_routine; /* arg 2*/
   *--stack = (uint32_t) arg;           /* arg 1*/
+  *--stack = (uint32_t) start_routine; /* arg 2*/
+  *--stack = 0x0;     /* ret addr */
 
   *--stack = 0x202;   /* eflags */
   *--stack = 0x8;     /* cs */
