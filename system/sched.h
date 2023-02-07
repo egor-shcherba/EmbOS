@@ -14,6 +14,8 @@ int sys_thread_sleep(void);
 int sys_thread_wakeup(struct thread *thread);
 int sys_thread_join(struct thread *thread, void **arg);
 int sys_thread_exit(void *retval);
+int sys_thread_self(void);
+int sys_thread_id(void);
 
 void sched_init(void);
 
