@@ -234,6 +234,20 @@ sys_thread_exit(void *retval)
   return 0;
 }
 
+int
+sys_thread_self(void)
+{
+  struct thread *current = sched_runq_get_current();
+  return (int) current;
+}
+
+int
+sys_thread_id(void)
+{
+  struct thread *current = sched_runq_get_current();
+  return current->id;
+}
+
 static inline void
 stack_init(
   void **stackp,
