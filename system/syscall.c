@@ -16,6 +16,8 @@ get_syscall_name(int num)
       case SYS_thread_wakeup : return "sys_thread_wakeup";
       case SYS_thread_join   : return "sys_thread_join";
       case SYS_thread_exit   : return "sys_thread_exit";
+      case SYS_thread_self   : return "sys_thread_self";
+      case SYS_thread_id     : return "sys_thread_id";
     }
 
   return "UNKNOW";
@@ -60,6 +62,8 @@ syscall_main(struct regs_t *regs)
         (struct thread*) regs->ebx, (void**) regs->ecx);
 
       case SYS_thread_exit: return sys_thread_exit((void*) regs->ebx);
+      case SYS_thread_self: return sys_thread_self();
+      case SYS_thread_id: return sys_thread_id();
     }
 
   return -1;
