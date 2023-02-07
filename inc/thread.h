@@ -59,4 +59,16 @@ thread_exit(void *retval)
   _syscall(SYS_thread_exit, retval, NULL, NULL, NULL, NULL);
 }
 
+static inline struct thread*
+thread_self(void)
+{
+  return (struct thread*) _syscall(SYS_thread_self, NULL, NULL, NULL, NULL, NULL);
+}
+
+static inline int
+thread_id(void)
+{
+  return _syscall(SYS_thread_id, NULL, NULL, NULL, NULL, NULL);
+}
+
 #endif /* NOT _THREAD_H */
