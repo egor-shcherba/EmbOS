@@ -2,6 +2,7 @@
 #define _THREAD_H
 
 #include <system/syscall.h>
+#include <system/mutex.h>
 #include <stddef.h>
 
 struct thread;
