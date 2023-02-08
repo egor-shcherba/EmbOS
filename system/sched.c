@@ -142,7 +142,7 @@ sched_runq_get_next(void)
 static inline void
 thread_destroy(struct thread *thread)
 { 
-  dprintf("thread dead '%s'\n", thread->name);
+  dprintf("thread dead '%s' id %d \n", thread->name, thread->id);
 
   kfree(thread->stackp);
   memset(thread, 0, sizeof(*thread));
@@ -157,7 +157,15 @@ schedule(void)
   next = sched_runq_get_next();
 
   if (prev->state == DEAD)
-    thread_destroy(prev);
+    {
+      thread_destroy(prev);
+
+      if (prev == next)
+        next = runq->idle;
+    }
+
+  if (prev->state == UNUSED && next->state == UNUSED)
+    next = runq->idle, prev = runq->idle;
 
   if (prev != runq->idle && prev->state == RUNNING)
     sched_runq_enqueue(prev);
@@ -178,7 +186,7 @@ sys_thread_sleep(void)
   struct thread *thread = sched_runq_get_current();
   thread_set_state(thread, SLEEP);
 
-  dprintf("thread sleep '%s'\n", thread->name);
+  dprintf("thread sleep '%s' id %d \n", thread->name, thread->id);
   schedule();
 
   return 0;
@@ -190,7 +198,7 @@ sys_thread_wakeup(struct thread *thread)
   thread_set_state(thread, RUNNING);
   list_add_tail(runq->ready_queue, &thread->node);
 
-  dprintf("thread wakeup '%s'\n", thread->name);
+  dprintf("thread wakeup '%s' id %d\n", thread->name, thread->id);
 
   return 0;
 }
@@ -203,7 +211,8 @@ sys_thread_join(struct thread *thread, void **arg)
   if (thread->joiner != NULL)
     return -EINVAL;
 
-  dprintf("thread '%s' join '%s'\n", current->name, thread->name);
+  dprintf("thread '%s' id %d join '%s' id %d\n",
+    current->name, current->id, thread->name, thread->id);
 
   thread->joiner = current;
   thread->retval = arg;
@@ -217,7 +226,7 @@ int
 sys_thread_exit(void *retval)
 {
   struct thread *current = sched_runq_get_current();
-  dprintf("thread exit '%s' reval %d\n", current->name, retval);
+  dprintf("thread exit '%s' id %d reval %d\n", current->name, current->id, retval);
 
   if (current->joiner != NULL)
     {
