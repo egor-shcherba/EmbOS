@@ -18,7 +18,7 @@ int sys_thread_self(void);
 int sys_thread_id(void);
 
 void sched_init(void);
-
+void schedule(void);
 void sched_enable(void);
 
 #endif /* NOT _SCHED_H */
