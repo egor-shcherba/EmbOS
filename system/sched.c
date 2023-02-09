@@ -379,8 +379,6 @@ sched_init(void)
 
   runq->current = NULL;
 
-  irq_set_handler(0, schedule);
-
   dprintf("initialized\n");
 }
 
