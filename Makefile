@@ -28,6 +28,7 @@ SRC = \
 	sys/exception.c \
 	sys/isr.S \
 	sys/pic.c \
+	sys/pit.c \
 	mem/heap.c \
 	driver/uart.c \
 	system/printf.c \
