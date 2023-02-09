@@ -1,6 +1,7 @@
 #include <sys/gdt.h>
 #include <sys/idt.h>
 #include <sys/pic.h>
+#include <sys/pit.h>
 #include <mem/heap.h>
 #include <driver/uart.h>
 #include <system/sched.h>
@@ -21,6 +22,7 @@ main(void)
   gdt_init();
   idt_init();
   pic_init();
+	pit_init();
   heap_init();
   sched_init();
   uart_init();
