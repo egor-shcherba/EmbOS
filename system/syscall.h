@@ -9,6 +9,7 @@
 #define SYS_thread_exit     5
 #define SYS_thread_self     6
 #define SYS_thread_id       7
+#define SYS_settimer        8
 
 int _syscall(int num, void *a1, void *a2, void *a3, void *a4, void *a5);
 
