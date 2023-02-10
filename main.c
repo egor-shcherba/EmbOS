@@ -5,10 +5,9 @@
 #include <mem/heap.h>
 #include <driver/uart.h>
 #include <system/sched.h>
+#include <system/timer.h>
 #include <debug/qemu.h>
 #include <klib/list.h>
-#include <stdio.h>
-#include <string.h>
 
 #define __DEBUG_HEADER__  "KERNEL"
 
@@ -25,6 +24,7 @@ main(void)
 	pit_init();
   heap_init();
   sched_init();
+  timer_init();
   uart_init();
 
   dprintf("all subsytem initialized.\n");
