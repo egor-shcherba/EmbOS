@@ -35,6 +35,7 @@ SRC = \
 	system/syscall.c \
 	system/sched.c \
 	system/mutex.c \
+	system/timer.c \
 	bin/init.c \
 
 OBJ = $(patsubst %.S,%.o,$(patsubst %.c,%.o,$(SRC)))
