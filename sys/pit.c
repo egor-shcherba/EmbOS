@@ -3,6 +3,7 @@
 #include <sys/io.h>
 #include <debug/qemu.h>
 #include <system/sched.h>
+#include <system/timer.h>
 #include <stdint.h>
 
 #define PIT_FREQ      1193182
@@ -16,6 +17,7 @@ static void
 pit_tick(void)
 {
   schedule();
+  timer_tick();
 }
 
 void
