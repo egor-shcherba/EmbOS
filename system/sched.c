@@ -156,6 +156,15 @@ schedule(void)
   prev = sched_runq_get_current();
   next = sched_runq_get_next();
 
+  //qprintf("PREV ID %d STATE %d NEXT ID %d STATE %d\n",
+    //prev->id, prev->state, next->id, next->state);
+
+  if (prev == next && prev->state == SLEEP)
+    {
+      runq->current = runq->idle;
+      return;
+    }
+
   if (prev->state == DEAD)
     {
       thread_destroy(prev);
