@@ -3,6 +3,7 @@
 #include <system/syscall.h>
 #include <system/sched.h>
 #include <system/timer.h>
+#include <driver/uart.h>
 
 #define __DEBUG_HEADER__ "SYSCALL"
 
@@ -20,6 +21,8 @@ get_syscall_name(int num)
       case SYS_thread_self   : return "sys_thread_self";
       case SYS_thread_id     : return "sys_thread_id";
       case SYS_settimer      : return "sys_settimer";
+      case SYS_read          : return "sys_read";
+      case SYS_flush          : return "sys_flush";
     }
 
   return "UNKNOW";
@@ -68,6 +71,9 @@ syscall_main(struct regs_t *regs)
       case SYS_thread_id: return sys_thread_id();
 
       case SYS_settimer : return sys_settimer(regs->ebx);
+
+      case SYS_read : return sys_read();
+      case SYS_flush : return sys_flush();
     }
 
   return -1;

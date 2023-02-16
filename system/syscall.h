@@ -10,6 +10,8 @@
 #define SYS_thread_self     6
 #define SYS_thread_id       7
 #define SYS_settimer        8
+#define SYS_read            9
+#define SYS_flush           10
 
 int _syscall(int num, void *a1, void *a2, void *a3, void *a4, void *a5);
 
