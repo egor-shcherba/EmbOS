@@ -22,6 +22,7 @@ SRC = \
 	main.c  \
 	klib/string.c \
 	klib/vsprintf.c \
+	klib/ring.c \
 	debug/qemu.c \
 	sys/gdt.c \
 	sys/idt.c \
@@ -36,6 +37,7 @@ SRC = \
 	system/sched.c \
 	system/mutex.c \
 	system/timer.c \
+	system/stdio.c \
 	init/init.c \
 
 OBJ = $(patsubst %.S,%.o,$(patsubst %.c,%.o,$(SRC)))
