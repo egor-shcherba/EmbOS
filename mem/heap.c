@@ -77,6 +77,7 @@ kmalloc(size_t nbytes)
             }
 
           p->next = NULL;
+          dprintf("allocated %d byte's addr %.8x\n", nbytes * sizeof(header_t), p + 1);
           return (void*) (p + 1);
         }
 
@@ -92,6 +93,7 @@ kfree(void *ptr)
 {
   header_t *bp = (header_t*) ptr - 1;
   header_t *p = freep;
+  dprintf("free addr %.8x\n", p + 1);
 
   if (freep == NULL)
     {

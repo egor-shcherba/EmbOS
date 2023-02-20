@@ -78,8 +78,6 @@ vsscanf(char *buf, const char *format, va_list ap)
 
   while (*format != 0)
     {
-      qprintf("format '%c' buf '%c'\n", *format, *buf);
-
       if (*format != '%')
         {
           if (*format == *buf)
