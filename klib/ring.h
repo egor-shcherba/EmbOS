@@ -30,6 +30,7 @@ ring_buffer_is_empty(struct ring_buffer *rb)
 void ring_buffer_init(struct ring_buffer *rb, int capacity);
 int ring_buffer_write(struct ring_buffer *rb, char c);
 int ring_buffer_read(struct ring_buffer *rb);
+int ring_buffer_read_tail(struct ring_buffer *rb);
 void ring_buffer_flush(struct ring_buffer *rb);
 
 #endif /* NOT _RING_H */

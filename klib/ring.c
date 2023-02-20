@@ -32,6 +32,16 @@ ring_buffer_read(struct ring_buffer *rb)
   return rb->buffer[rb->head++ % rb->capacity];
 }
 
+int
+ring_buffer_read_tail(struct ring_buffer *rb)
+{
+  if (ring_buffer_is_empty(rb))
+    return -1;
+
+  rb->size--;
+  return rb->buffer[--rb->tail % rb->capacity];
+}
+
 void
 ring_buffer_flush(struct ring_buffer *rb)
 {
