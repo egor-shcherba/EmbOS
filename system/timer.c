@@ -24,7 +24,7 @@ void
 timer_init(void)
 {
   memset(timers, 0, sizeof(timers));
-  qprintf("initialized\n");
+  dprintf("initialized\n");
 }
 
 static inline void
