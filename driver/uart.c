@@ -124,7 +124,7 @@ uart_handler(void)
           for (char *c = esc; *c != 0; c++)
             uart_write(*c);
 
-          ring_buffer_read(&rb);
+          ring_buffer_read_tail(&rb);
           return;
         }
 
