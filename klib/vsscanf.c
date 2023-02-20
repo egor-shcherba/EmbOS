@@ -1,6 +1,5 @@
 #include <klib/vsscanf.h>
 #include <stdio.h>
-#include <debug/qemu.h>
 #include <stddef.h>
 
 #define IS_DIGIT(c) ((c) >= '0' && ((c) <= '9'))
@@ -121,7 +120,6 @@ vsscanf(char *buf, const char *format, va_list ap)
             continue;
 
           default:
-            qprintf("default\n");
             if (*buf != '%')
               return -1;
 
