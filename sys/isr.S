@@ -70,17 +70,6 @@ syscall_enter:
   mov %eax, 28(%esp)  # save eax in stack
   jmp intr_leave
 
-#syscall_leave:
-#  call sched_get_current_context
-#  mov %eax, %esp
-#  RESTORE_REGS
-#  add $8, %esp
-#  iret
-
-#  cli
-#  hlt
-
-
 .globl intr_leave
 intr_leave:
   call sched_get_current_context
