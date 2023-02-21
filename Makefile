@@ -22,7 +22,9 @@ SRC = \
 	main.c  \
 	klib/string.c \
 	klib/vsprintf.c \
+	klib/vsscanf.c \
 	klib/ring.c \
+	klib/stdlib.c \
 	debug/qemu.c \
 	sys/gdt.c \
 	sys/idt.c \
@@ -32,13 +34,13 @@ SRC = \
 	sys/pit.c \
 	mem/heap.c \
 	driver/uart.c \
-	system/printf.c \
 	system/syscall.c \
 	system/sched.c \
 	system/mutex.c \
 	system/timer.c \
 	system/stdio.c \
-	init/init.c \
+
+SRC += $(shell find ./init/ -name "*.c")
 
 OBJ = $(patsubst %.S,%.o,$(patsubst %.c,%.o,$(SRC)))
 
