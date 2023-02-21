@@ -2,6 +2,7 @@
 #define _UNISTD_H
 
 #include <system/syscall.h>
+#include <stddef.h>
 
 static inline int
 sleep(unsigned seconds)
