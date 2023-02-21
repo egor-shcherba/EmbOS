@@ -27,6 +27,12 @@ timer_init(void)
   dprintf("initialized\n");
 }
 
+unsigned int
+timer_gettime(void)
+{
+  return _experiod;
+}
+
 static inline void
 timer_set(struct timer *timer, struct thread *owner, unsigned int mseconds)
 {
