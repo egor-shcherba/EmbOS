@@ -4,6 +4,7 @@
 
 #define __DEBUG_HEADER__  "SHELL"
 
+extern void* cmd_test(void *test);
 extern void* cmd_sleep(void *arg);
 extern void* cmd_echo(void *arg);
 extern void* cmd_uptime(void *arg);
@@ -34,6 +35,7 @@ shell_init(void)
   shell_register_command("echo", cmd_echo);
   shell_register_command("uptime", cmd_uptime);
   shell_register_command("uname", cmd_uname);
+  shell_register_command("test", cmd_test);
 
   dprintf("cmd list initialized\n");
 }
