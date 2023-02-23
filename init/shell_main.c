@@ -115,7 +115,7 @@ shell_main(void *arg)
           continue;
         }
 
-      thread_create(&thread_cmd, input_str, cmd->probe, (void*) args);
+      thread_create(&thread_cmd, args[0], cmd->probe, (void*) args);
       thread_join(thread_cmd, (void*) &ret_code);
 
       if (ret_code == 0 && and_op == true)
