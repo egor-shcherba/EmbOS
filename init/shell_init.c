@@ -13,6 +13,8 @@ extern void* cmd_thread_example0(void *arg);
 extern void* cmd_thread_example1(void *arg);
 extern void* cmd_ud2(void *arg);
 
+extern void* cmd_example(void *arg);
+
 static char *help_msg =
   "sleep [NUMBER]\n"
   "echo [args...]\n"
@@ -44,6 +46,7 @@ shell_init(void)
   shell_register_command("thread-example0", cmd_thread_example0);
   shell_register_command("thread-example1", cmd_thread_example1);
   shell_register_command("ud2", cmd_ud2);
+  shell_register_command("example", cmd_example);
 
   dprintf("cmd list initialized\n");
 }
