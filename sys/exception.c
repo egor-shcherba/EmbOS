@@ -61,7 +61,7 @@ exception_handler(struct regs_t *regs)
       sys_thread_exit((void*) -1);
     }
 
-  printf("KERNEL PANNIC: '%s'\n", get_exception_name(regs->intr_number);
+  printf("KERNEL PANNIC: '%s'\n", get_exception_name(regs->intr_number));
 
   cpu_disable_interrupt();
   cpu_halt();
