@@ -8,34 +8,15 @@
 #include <stddef.h>
 #include <macros.h>
 #include <stdio.h>
-
 #include <sys/pic.h>
+#include <system/thread.h>
 
 #define __DEBUG_HEADER__  "SCHEDULER"
 
 extern __attribute__((noreturn)) void intr_leave(void);
 
-enum THREAD_STATE {
-  UNUSED,
-  RUNNING,
-  SLEEP,
-  INTERUPTIBLE,
-  DEAD
-};
-
 #define THREAD_NAME_LENGTH  64
 #define THREAD_STACK_SIZE   0x4000  /* 16 Kib */
-
-struct thread {
-  int id;
-  char name[THREAD_NAME_LENGTH];
-  void *stackp;
-  enum THREAD_STATE state;
-  struct thread *joiner;
-  void **retval;
-
-  struct list node;
-};
 
 struct runq_queue {
   struct thread *current;
@@ -43,13 +24,13 @@ struct runq_queue {
   struct thread *idle;
 };
 
-#define MAX_THREAD  16
+#define MAX_THREAD  256
 
 static struct thread thread_table[MAX_THREAD] = { 0 };
 static int id = -1;
 static struct runq_queue *runq;
 
-void*
+static void*
 thread_idle(void *arg)
 {
   UNUSED(arg);
@@ -156,9 +137,6 @@ schedule(void)
   prev = sched_runq_get_current();
   next = sched_runq_get_next();
 
-  //qprintf("PREV ID %d STATE %d NEXT ID %d STATE %d\n",
-    //prev->id, prev->state, next->id, next->state);
-
   if (prev == next && prev->state == SLEEP)
     {
       runq->current = runq->idle;
@@ -205,7 +183,7 @@ int
 sys_thread_wakeup(struct thread *thread)
 {
   thread_set_state(thread, RUNNING);
-  list_add_tail(runq->ready_queue, &thread->node);
+  sched_runq_enqueue(thread);
 
   dprintf("thread wakeup '%s' id %d\n", thread->name, thread->id);
 
@@ -217,11 +195,11 @@ sys_thread_join(struct thread *thread, void **arg)
 {
   struct thread *current = sched_runq_get_current();
 
-  if (thread->joiner != NULL)
+  if (thread->joiner != NULL || thread->state == UNUSED)
     return -EINVAL;
 
   dprintf("thread '%s' id %d join '%s' id %d\n",
-    current->name, current->id, thread->name, thread->id);
+  current->name, current->id, thread->name, thread->id);
 
   thread->joiner = current;
   thread->retval = arg;
