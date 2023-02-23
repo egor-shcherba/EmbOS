@@ -1,5 +1,8 @@
 #include <debug/qemu.h>
 #include <sys/x86.h>
+#include <system/sched.h>
+#include <system/thread.h>
+#include <stdio.h>
 
 static inline const char*
 get_exception_name(int num)
@@ -32,14 +35,33 @@ get_exception_name(int num)
 void
 exception_handler(struct regs_t *regs)
 {
+  qprintf("===========================================================\n");
+
+  struct thread *thread = (struct thread*) sys_thread_self();
+
+  if (thread != NULL)
+    qprintf("THREAD '%s' id %d\n", thread->name, thread->id);
+  else
+    qprintf("!!!KERNEL PANIC!!!");
+
   qprintf("EXCEPTION '%s' error code %d\n",
     get_exception_name(regs->intr_number), regs->error_code);
 
   qprintf("EIP %#.8x CS  %#.8x EFLAGS %#.8x\n",
     regs->eip, regs->cs, regs->eflags);
 
-  qprintf("EAX %#.8x EBX %#.8x ECX %#.8x EDX %#.8x",
+  qprintf("EAX %#.8x EBX %#.8x ECX %#.8x EDX %#.8x\n",
     regs->eax, regs->ebx, regs->ecx, regs->edx);
+
+  qprintf("===========================================================\n");
+
+  if (thread != NULL)
+    {
+      printf("Segmentation fault\n");
+      sys_thread_exit((void*) -1);
+    }
+
+  printf("KERNEL PANNIC: '%s'\n", get_exception_name(regs->intr_number);
 
   cpu_disable_interrupt();
   cpu_halt();
