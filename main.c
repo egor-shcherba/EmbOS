@@ -21,7 +21,7 @@ main(void)
   gdt_init();
   idt_init();
   pic_init();
-	pit_init();
+  pit_init();
   heap_init();
   sched_init();
   timer_init();
